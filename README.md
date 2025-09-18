@@ -131,6 +131,7 @@ GET http://localhost:3500/status
 | POST | `/check-number` | Verificar se número tem WhatsApp |
 | POST | `/logout` | Desconectar sessão |
 | POST | `/reconnect` | Gerar novo QR Code |
+| GET | `/k8s/helloworld` | Endpoint de teste, retorna "Hello World" |
 
 ### Enviar Mensagem
 

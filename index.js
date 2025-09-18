@@ -135,6 +135,16 @@ app.get('/status', (req, res) => {
 });
 
 /**
+ * @route GET /k8s/helloworld
+ * @description Endpoint de teste para Kubernetes. Retorna "Hello World".
+ * @returns {string} "Hello World"
+ * @example
+ *   curl http://localhost:3000/k8s/helloworld
+ */
+app.get('/k8s/helloworld', (req, res) => {
+    res.send('Hello World');
+});
+/**
  * @route POST /send-message
  * @description Envia uma mensagem para um número de WhatsApp.
  * @body {string} number - Número de telefone (com DDD, pode ser sem o 55).
