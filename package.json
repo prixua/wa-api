@@ -1,6 +1,6 @@
 {
   "name": "whatsapp-api-node",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "API Node.js para envio de mensagens via WhatsApp usando whatsapp-web.js",
   "main": "index.js",
   "scripts": {

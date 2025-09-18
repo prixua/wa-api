@@ -458,6 +458,7 @@ app.listen(PORT, () => {
     console.log(`   POST /check-number     - Verificar se número tem WhatsApp`);
     console.log(`   POST /logout           - Desconectar sessão e limpar autenticação`);
     console.log(`   POST /reconnect        - Gerar novo QR Code e reconectar`);
+    console.log(`   POST /k8s/helloworld   - Endpoint de teste para Kubernetes`);
     console.log('');
     console.log('🔧 Para debug do seu número, execute: node debug-number.js');
 });
