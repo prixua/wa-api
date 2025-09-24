@@ -32,27 +32,26 @@ const client = new Client({
     }),
     puppeteer: {
         headless: true,
-        args: [
-            '--no-sandbox',
-            '--disable-setuid-sandbox',
-            '--disable-dev-shm-usage',
-            '--disable-accelerated-2d-canvas',
-            '--no-first-run',
-            '--no-zygote',
-            '--single-process',
-            '--disable-gpu',
-            '--disable-background-timer-throttling',
-            '--disable-backgrounding-occluded-windows',
-            '--disable-renderer-backgrounding',
-            '--disable-features=TranslateUI',
-            '--disable-ipc-flooding-protection',
-            '--user-data-dir=/tmp/chrome-user-data-' + Date.now(),
-            '--no-default-browser-check',
-            '--force-single-process',
-            '--ignore-certificate-errors',
-            '--ignore-ssl-errors',
-            '--ignore-certificate-errors-spki-list'
-        ]
+        // Obter argumentos de variável de ambiente se fornecidos
+        args: process.env.PUPPETEER_ARGS ? 
+            process.env.PUPPETEER_ARGS.split(',') : 
+            [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-gpu',
+                '--disable-software-rasterizer',
+                '--disable-extensions',
+                '--disable-component-extensions-with-background-pages',
+                '--disable-default-apps',
+                '--mute-audio',
+                '--no-default-browser-check',
+                '--autoplay-policy=user-gesture-required',
+                '--window-size=1280,720'
+            ],
+        // Let Puppeteer download and use its own Chromium
+        // This works in both local and Docker environments
+        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined
     }
 });
 
