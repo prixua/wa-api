@@ -131,7 +131,8 @@ GET http://localhost:3500/status
 | POST | `/check-number` | Verificar se número tem WhatsApp |
 | POST | `/logout` | Desconectar sessão |
 | POST | `/reconnect` | Gerar novo QR Code |
-| GET | `/k8s/helloworld` | Endpoint de teste, retorna "Hello World" |
+| POST | `/k8s/insert` | Insere registro na collection 'dados' do MongoDB |
+| GET  | `/k8s/total`  | Retorna total de registros na collection 'dados' |
 
 ### Enviar Mensagem
 
@@ -186,6 +187,44 @@ Retorna o status da conexão com WhatsApp.
 **GET** `/client-info`
 
 Retorna informações do WhatsApp conectado.
+
+### Inserir Registro no MongoDB
+
+**POST** `/k8s/insert?texto=algumvalor`
+
+Insere um registro novo na collection `dados` do banco MongoDB.
+
+**Exemplo de uso:**
+```bash
+curl -X POST "http://localhost:3500/k8s/insert?texto=ola"
+```
+**Resposta:**
+```json
+{
+  "success": true,
+  "id": "<ObjectId>",
+  "texto": "ola"
+}
+```
+
+### Total de Registros no MongoDB
+
+**GET** `/k8s/total`
+
+Retorna a quantidade total de registros na collection `dados` do MongoDB.
+
+**Exemplo de uso:**
+```bash
+curl "http://localhost:3500/k8s/total"
+```
+**Resposta:**
+```json
+{
+  "success": true,
+  "total": 42,
+  "message": "O total de registros é 42"
+}
+```
 
 ## 📱 Formato de Números
 

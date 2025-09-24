@@ -2,6 +2,7 @@ const express = require('express');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const cors = require('cors');
+const { MongoClient } = require('mongodb');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -436,6 +437,59 @@ app.post('/logout', async (req, res) => {
     }
 });
 
+// Configuração MongoDB
+const mongoUri = process.env.MONGO_URI || 'mongodb://mongo:27017/registros';
+const dbName = 'registros';
+const collectionName = 'dados';
+
+async function getMongoCollection() {
+    const client = new MongoClient(mongoUri, { useUnifiedTopology: true });
+    await client.connect();
+    const db = client.db(dbName);
+    const collection = db.collection(collectionName);
+    return { client, collection };
+}
+
+/**
+ * @route POST /k8s/insert
+ * @description Insere um registro novo na collection 'dados' do MongoDB. Recebe o texto via query param (?texto=algumvalor).
+ * @returns {Object} Registro inserido
+ * @example
+ *   curl -X POST "http://localhost:3000/k8s/insert?texto=ola"
+ */
+app.post('/k8s/insert', async (req, res) => {
+    const texto = req.query.texto;
+    if (!texto) {
+        return res.status(400).json({ success: false, error: 'Parâmetro texto obrigatório' });
+    }
+    try {
+        const { client, collection } = await getMongoCollection();
+        const result = await collection.insertOne({ texto });
+        await client.close();
+        res.json({ success: true, id: result.insertedId, texto });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+/**
+ * @route GET /k8s/total
+ * @description Retorna a quantidade total de registros na collection 'dados' do MongoDB.
+ * @returns {Object} Total de registros
+ * @example
+ *   curl "http://localhost:3000/k8s/total"
+ */
+app.get('/k8s/total', async (req, res) => {
+    try {
+        const { client, collection } = await getMongoCollection();
+        const total = await collection.countDocuments();
+        await client.close();
+        res.json({ success: true, total, message: `O total de registros é ${total}` });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
 // Middleware de tratamento de erro
 app.use((err, req, res, next) => {
     console.error('❌ Erro não tratado:', err);
@@ -459,6 +513,8 @@ app.listen(PORT, () => {
     console.log(`   POST /logout           - Desconectar sessão e limpar autenticação`);
     console.log(`   POST /reconnect        - Gerar novo QR Code e reconectar`);
     console.log(`   POST /k8s/helloworld   - Endpoint de teste para Kubernetes`);
+    console.log(`   POST /k8s/insert       - Insere registro na collection 'dados' do MongoDB`);
+    console.log(`   GET  /k8s/total        - Retorna total de registros na collection 'dados' do MongoDB`);
     console.log('');
     console.log('🔧 Para debug do seu número, execute: node debug-number.js');
 });
