@@ -29,8 +29,9 @@ O workflow `.github/workflows/docker-build.yml` está configurado para:
 3. Configurar o ambiente Docker
 4. Fazer login no Docker Hub usando seus secrets
 5. Construir a imagem Docker usando o `Dockerfile`
-6. Fazer push da imagem para o Docker Hub como `prixua/whatsapp-api:latest`
-7. Adicionar também uma tag com o SHA do commit para rastreabilidade
+6. Fazer push da imagem para o Docker Hub com duas tags:
+   - `prixua/whatsapp-api:latest` (tag principal sempre atualizada)
+   - `prixua/whatsapp-api:sha-xxxxxx` (onde xxxxxx é o hash do commit, para rastreabilidade)
 
 ## Testes e Execução Manual
 

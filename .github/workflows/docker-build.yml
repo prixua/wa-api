@@ -45,6 +45,9 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: prixua/whatsapp-api
+          tags: |
+            type=raw,value=latest
+            type=sha
 
       # Constrói e publica a imagem Docker
       - name: Build and push Docker image
